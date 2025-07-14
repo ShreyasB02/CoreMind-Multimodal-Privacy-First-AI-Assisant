@@ -1,0 +1,13 @@
+torch
+torchvision
+pillow
+transformers
+sentence-transformers
+faiss-cpu 
+sqlite-utils
+dotenv
+streamlit
+faster-whisper
+langchain
+langchain-core
+langgraph
