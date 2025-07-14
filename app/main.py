@@ -49,7 +49,7 @@ if section == "📷 Upload Memory":
                 filepath=save_path,
                 embedding=embedding,
             )
-            st.success("✅ Visual memory stored successfully!")
+            st.success("Visual memory stored successfully!")
 
     st.markdown("---")
 

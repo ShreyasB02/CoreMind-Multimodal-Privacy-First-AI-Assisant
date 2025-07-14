@@ -16,11 +16,10 @@ ADVANCED_SIRI
 | 🔍 **Ask Your Memory**           | Natural language search over your stored experiences using LangGraph                                    |
 | 📅 **Weekly Reflections**        | Automatically clusters and summarizes your memories using local LLMs (Ollama or Apple Foundation Model) |
 | 🛡️ **Privacy-First**            | Entire pipeline runs locally (no cloud dependencies), with optional CoreML / Foundation Model support   |
-| 🍏 **Apple-Aligned Stack**       | Built to integrate with iOS 18's Foundation Models framework and run on-device                          |
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ```
           📷 / 🎤 User Inputs
