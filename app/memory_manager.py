@@ -28,6 +28,16 @@ def initialize_memory():
             )
         """
         )
+
+        c.execute('''
+        CREATE TABLE IF NOT EXISTS reflections (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            summary TEXT,
+            timestamp TEXT,
+            tags TEXT
+        )
+        '''
+        )
         conn.commit()
         conn.close()
     
@@ -57,7 +67,7 @@ def search_memory(query_embedding, k=5):
     index=faiss.read_index(FAISS_DB)
     vector=np.array([query_embedding]).astype('float32')
     D,I=index.search(vector,k) #Distance, Index
-    
+
     conn = sqlite3.connect(SQL_DB)
     c = conn.cursor()
     c.execute("SELECT * FROM memories")
@@ -70,3 +80,18 @@ def search_memory(query_embedding, k=5):
             results.append(rows[idx])
 
     return results
+
+
+def save_reflection(summary: str, tags: str = ""):
+    timestamp = datetime.utcnow().isoformat()
+    conn = sqlite3.connect(SQL_DB)
+    c = conn.cursor()
+    c.execute(
+        """
+        INSERT INTO reflections (summary, timestamp, tags)
+        VALUES (?, ?, ?)
+    """,
+        (summary, timestamp, tags),
+    )
+    conn.commit()
+    conn.close()

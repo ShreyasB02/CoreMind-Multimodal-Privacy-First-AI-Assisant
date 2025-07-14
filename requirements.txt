@@ -11,3 +11,4 @@ faster-whisper
 langchain
 langchain-core
 langgraph
+ollama
