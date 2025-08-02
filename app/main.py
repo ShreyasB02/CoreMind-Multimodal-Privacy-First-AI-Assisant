@@ -18,8 +18,8 @@ initialize_memory()
 load_dotenv()
 
 # Streamlit Page Setup
-st.set_page_config(page_title="SiriMemory++", layout="wide")
-st.sidebar.title("🧠 SiriMemory++")
+st.set_page_config(page_title="AdvSiriMemory", layout="wide")
+st.sidebar.title("AdvSiriMemory")
 section = st.sidebar.radio(
     "Navigate", ["📷 Upload Memory", "🔍 Ask Memory", "📅 Weekly Reflection"]
 )
@@ -71,11 +71,11 @@ if section == "📷 Upload Memory":
                 filepath=audio_path,
                 embedding=embedding,
             )
-            st.success("✅ Voice memory stored successfully!")
+            st.success("Voice memory stored successfully!")
 
 # ---------------------- Section: Ask ---------------------- #
-elif section == "🔍 Ask Memory":
-    st.header("🔍 Ask Your Memory")
+elif section == "Ask Memory":
+    st.header("Ask Your Memory")
     st.markdown("Type natural language questions to recall memories.")
 
     query = st.text_input("e.g., What did I see related to Apple last week?")

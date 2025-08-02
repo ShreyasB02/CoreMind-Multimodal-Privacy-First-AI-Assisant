@@ -29,7 +29,7 @@ ADVANCED_SIRI
        └────────────────────┘
                 ↓
        ┌────────────────────┐
-       │ Embedding (SBERT)  │
+       │ Embedding (BERT)  │
        └────────────────────┘
                 ↓
      FAISS + SQLite Storage (Memory)
