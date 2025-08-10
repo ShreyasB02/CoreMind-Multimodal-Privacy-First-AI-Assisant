@@ -1,9 +1,9 @@
-ADVANCED_SIRI
+COREMIND
 ---
 > A privacy-first, multimodal memory assistant inspired by Apple Intelligence.
 > Built to run locally, summarize your life, and reflect — just like the next-gen Siri.
 
-![Advanced_Siri demo screenshot](demo/screenshot.png)
+![COREMIND demo screenshot](demo/screenshot.png)
 ---
 
 ## ✨ Features
@@ -53,20 +53,13 @@ ADVANCED_SIRI
 
 ---
 
-## 🚀 Demo
-
-[https://user-images.githubusercontent.com/.../sirimemory-demo.mp4](https://user-images.githubusercontent.com/.../sirimemory-demo.mp4)
-*(Upload an image or voice note → Ask Advanced_Siri → See weekly reflections)*
-
----
-
 ## 💻 Run Locally
 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/shreyasbattula/sirimemory.git
-cd sirimemory
+git clone https://github.com/shreyasbattula/core-mind.git
+cd core-mind
 ```
 
 ### 2. Install dependencies
@@ -100,7 +93,7 @@ SQLITE_DB_PATH=data/memory_meta.sqlite
 ## 🔧 Folder Structure
 
 ```
-Advanced_Siri
+COREMIND
 ├── app/
 │   ├── main.py              # Streamlit UI
 │   ├── memory_manager.py    # Store/retrieve memory
@@ -130,15 +123,17 @@ Advanced_Siri
 * [x] LangGraph query flow
 * [x] Ollama-based summarization
 * [x] Weekly memory reflection storage
-* [ ] SwiftUI version using Apple Foundation Model API
-* [ ] Convert BLIP & Whisper to CoreML
-* [ ] Publish as Siri Shortcut or iOS widget
+
+## 🚀 FUTURE WORK
+* SwiftUI version using Apple Foundation Model API
+* Convert BLIP & Whisper to CoreML
+* Publish as Siri Shortcut or iOS widget
 
 ---
 
 ## 💡 Inspiration
 
-Advanced_Siri is inspired by:
+COREMIND is inspired by:
 
 * Apple Intelligence (WWDC 2025)
 * Humane AI Pin
