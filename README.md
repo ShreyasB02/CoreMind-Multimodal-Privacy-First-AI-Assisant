@@ -1,9 +1,9 @@
-# CoreMind — Privacy-First Multimodal Memory Assistant with Model Context Protocol
+# CoreMind — Privacy-First Multimodal AI Assistant with Model Context Protocol
 
 > **On-device intelligence that remembers what matters — across apps, images, and conversations.**
 
-CoreMind is a **privacy-first, multimodal memory assistant** inspired by Apple's design philosophy, built to run fully **on-device**.  
-It ingests **voice, images, and app data** (Slack, Calendar, Teams) via a custom **Model Context Protocol (MCP)** and provides **instant semantic recall**, **summaries**, and **insights** — without sending your data to the cloud.
+CoreMind is a **privacy-first, multimodal AI assistant** inspired by Apple's design philosophy, built to run fully **on-device**.  
+It ingests **voice, images, and app data** (Slack, Calendar, Teams) via a custom **Model Context Protocol (MCP)** and provides **instant semantic recall**, **summaries**, and **insights** , without sending your data to the cloud.
 
 ---
 
@@ -46,9 +46,9 @@ It ingests **voice, images, and app data** (Slack, Calendar, Teams) via a custom
 ```mermaid
 flowchart TD
     subgraph Ingestion
-        A[📷 Image Input] --> B[BLIP/LLaVA Captioning]
-        C[🎙 Voice Input] --> D[Whisper Transcription]
-        E[🗂 App Data via MCP] --> F[Text Extraction]
+        A[Image Input] --> B[BLIP or LLaVA Captioning]
+        C[Voice Input] --> D[Whisper Transcription]
+        E[App Data via MCP] --> F[Text Extraction]
     end
 
     subgraph Processing
@@ -60,17 +60,17 @@ flowchart TD
     end
 
     subgraph Retrieval & Reasoning
-        J[User Query (Text/Voice)] --> K[Embedding + BM25 Search]
+        J["User Query \\(Text or Voice\\)"] --> K[Embedding + BM25 Search]
         H --> K
         I --> K
         K --> L[LangGraph Episodic Memory Agent]
-        L --> M[Local LLM (Ollama) Summarizer]
+        L --> M[Local LLM - Ollama Summarizer]
     end
 
     subgraph Output
-        M --> N[📅 Timeline View]
-        M --> O[🔍 Search Results]
-        M --> P[🧠 Weekly Reflection]
+        M --> N[Timeline View]
+        M --> O[Search Results]
+        M --> P[Weekly Reflection]
     end
 ```
 
@@ -110,12 +110,13 @@ Open [http://localhost:8501](http://localhost:8501) to access the UI.
 
 ## 🎯 Why This Matters
 
-CoreMind is a prototype of **next-generation Siri** capabilities IMO:
+CoreMind is a prototype of **next-generation Siri** capabilities that I want to see Siri being expanded to:
 - Multimodal understanding (speech, vision, text)  
 - On-device inference for **privacy-first** design  
 - Context integration across apps using **MCP**  
 - Fast, semantic memory recall for personal productivity  
 - Human-like episodic reasoning using agent frameworks
+- A voice-first, text-enabled AI assistant that lets you command and interact with any app on your phone—instantly, hands-free, and without ever opening it.
 
 ---
 
