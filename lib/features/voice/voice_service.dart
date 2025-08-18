@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:speech_to_text/speech_recognition_error.dart' as stt;
-import 'package:speech_to_text/speech_recognition_result.dart' as stt;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/foundation.dart';
 
@@ -25,21 +25,19 @@ class VoiceService {
     if (_isInitialized) return true;
 
     try {
-      // Initialize Speech-to-Text
+      // Enable debug logging to see what's failing
       bool available = await _speechToText.initialize(
         onStatus: _onSpeechStatus,
         onError: _onSpeechError,
-        debugLogging: kDebugMode,
+        debugLogging: true,
       );
 
       if (!available) {
-        debugPrint('Speech recognition not available');
+        debugPrint('Speech recognition not available on this device');
         return false;
       }
 
-      // Configure TTS for privacy (local processing preferred)
       await _configureTTS();
-
       _isInitialized = true;
       return true;
     } catch (e) {
@@ -49,15 +47,17 @@ class VoiceService {
   }
 
   Future<void> _configureTTS() async {
-    await _flutterTts.setLanguage('en-US');
-    await _flutterTts.setSpeechRate(0.8);
-    await _flutterTts.setVolume(1.0);
-    await _flutterTts.setPitch(1.0);
+    try {
+      await _flutterTts.setLanguage('en-US');
+      await _flutterTts.setSpeechRate(0.8);
+      await _flutterTts.setVolume(1.0);
+      await _flutterTts.setPitch(1.0);
 
-    // Prefer offline TTS for privacy
-    var engines = await _flutterTts.getEngines;
-    if (engines.isNotEmpty) {
-      await _flutterTts.setEngine(engines.first['name']);
+      // Skip engine selection for now - use default TTS engine
+      // This avoids the type mismatch error
+      debugPrint('TTS configured with default engine');
+    } catch (e) {
+      debugPrint('TTS configuration error: $e');
     }
   }
 
@@ -93,7 +93,7 @@ class VoiceService {
     _onListeningStopped();
   }
 
-  void _onSpeechResult(stt.SpeechRecognitionResult result) {
+  void _onSpeechResult(SpeechRecognitionResult result) {
     _transcriptionController.add(result.recognizedWords);
 
     if (result.finalResult) {
@@ -110,7 +110,7 @@ class VoiceService {
     }
   }
 
-  void _onSpeechError(stt.SpeechRecognitionError error) {
+  void _onSpeechError(SpeechRecognitionError error) {
     debugPrint('Speech error: ${error.errorMsg}');
     _onListeningStopped();
   }

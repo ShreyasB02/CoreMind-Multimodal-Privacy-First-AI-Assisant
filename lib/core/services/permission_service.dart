@@ -1,32 +1,25 @@
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter/services.dart';
 
 class PermissionService {
-  // static const _platform = MethodChannel('com.coremind.assistant/permissions');
-
   static Future<bool> requestVoicePermissions() async {
-    final permissions = [
-      Permission.microphone,
-      Permission.speech,
-      Permission.storage,
-    ];
+    // Check current status first
+    var status = await Permission.microphone.status;
 
-    Map<Permission, PermissionStatus> statuses = await permissions.request();
-
-    bool allGranted = statuses.values.every(
-            (status) => status == PermissionStatus.granted
-    );
-
-    if (!allGranted) {
-      await _showPermissionDialog();
+    if (status.isGranted) {
+      return true;
     }
 
-    return allGranted;
-  }
+    if (status.isDenied) {
+      status = await Permission.microphone.request();
+    }
 
-  static Future<void> _showPermissionDialog() async {
-    // Guide user to settings if needed
-    await openAppSettings();
-  }
+    if (status.isPermanentlyDenied) {
+      // Guide user to settings
+      await openAppSettings();
+      return false;
+    }
 
+    return status.isGranted;
+  }
 }
+
