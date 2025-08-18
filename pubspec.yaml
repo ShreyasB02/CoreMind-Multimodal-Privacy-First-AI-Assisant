@@ -1,0 +1,51 @@
+name: coremind_android
+description: Privacy-first on-device AI assistant for Android
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Core AI & Speech
+  speech_to_text: ^7.3.0
+  flutter_tts: ^4.1.0
+  tflite_flutter: ^0.11.0
+  #tflite_flutter_helper: ^0.3.1
+
+  # Data & Storage
+  sqflite: ^2.3.3+1
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.4
+
+  # System Integration
+  workmanager: ^0.9.0+2
+  permission_handler: ^12.0.1
+
+  # MCP & Communication
+  web_socket_channel: ^3.0.3
+  http: ^1.2.2
+
+  # Multimodal Processing
+  camera: ^0.11.2
+  image: ^4.2.0
+
+  # UI Components
+  cupertino_icons: ^1.0.8
+
+  path: any
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.12
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/models/
+    - assets/prompts/
