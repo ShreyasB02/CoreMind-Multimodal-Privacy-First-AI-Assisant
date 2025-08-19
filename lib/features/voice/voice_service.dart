@@ -11,21 +11,35 @@ class VoiceService {
 
   bool _isInitialized = false;
   bool _isListening = false;
+  bool _isDisposed = false;
 
-  final StreamController<String> _transcriptionController = StreamController<String>.broadcast();
-  final StreamController<bool> _listeningController = StreamController<bool>.broadcast();
+  StreamController<String>? _transcriptionController;
+  StreamController<bool>? _listeningController;
 
-  Stream<String> get transcriptionStream => _transcriptionController.stream;
-  Stream<bool> get listeningStream => _listeningController.stream;
+  Stream<String> get transcriptionStream => _transcriptionController?.stream ?? const Stream.empty();
+  Stream<bool> get listeningStream => _listeningController?.stream ?? const Stream.empty();
 
   bool get isListening => _isListening;
   bool get isInitialized => _isInitialized;
 
+  VoiceService() {
+    _initControllers();
+  }
+
+  void _initControllers() {
+    if (_isDisposed) return;
+
+    _transcriptionController?.close();
+    _listeningController?.close();
+
+    _transcriptionController = StreamController<String>.broadcast();
+    _listeningController = StreamController<bool>.broadcast();
+  }
+
   Future<bool> initialize() async {
-    if (_isInitialized) return true;
+    if (_isInitialized || _isDisposed) return _isInitialized;
 
     try {
-      // Enable debug logging to see what's failing
       bool available = await _speechToText.initialize(
         onStatus: _onSpeechStatus,
         onError: _onSpeechError,
@@ -39,6 +53,7 @@ class VoiceService {
 
       await _configureTTS();
       _isInitialized = true;
+      debugPrint('Voice service initialized successfully');
       return true;
     } catch (e) {
       debugPrint('Voice service initialization error: $e');
@@ -52,10 +67,7 @@ class VoiceService {
       await _flutterTts.setSpeechRate(0.8);
       await _flutterTts.setVolume(1.0);
       await _flutterTts.setPitch(1.0);
-
-      // Skip engine selection for now - use default TTS engine
-      // This avoids the type mismatch error
-      debugPrint('TTS configured with default engine');
+      debugPrint('TTS configured successfully');
     } catch (e) {
       debugPrint('TTS configuration error: $e');
     }
@@ -65,12 +77,16 @@ class VoiceService {
     Duration? listenFor,
     Duration? pauseFor,
   }) async {
-    if (!_isInitialized || _isListening) return;
+    if (!_isInitialized || _isListening || _isDisposed) {
+      debugPrint('Cannot start listening: initialized=$_isInitialized, listening=$_isListening, disposed=$_isDisposed');
+      return;
+    }
 
     try {
+      debugPrint('Starting to listen...');
       await _speechToText.listen(
         onResult: _onSpeechResult,
-        listenFor: listenFor ?? const Duration(minutes: 2),
+        listenFor: listenFor ?? const Duration(seconds: 30),
         pauseFor: pauseFor ?? const Duration(seconds: 3),
         partialResults: true,
         localeId: 'en_US',
@@ -79,7 +95,8 @@ class VoiceService {
       );
 
       _isListening = true;
-      _listeningController.add(true);
+      _addToListeningStream(true);
+      debugPrint('Started listening successfully');
     } catch (e) {
       debugPrint('Start listening error: $e');
       _onListeningStopped();
@@ -87,14 +104,23 @@ class VoiceService {
   }
 
   Future<void> stopListening() async {
-    if (!_isListening) return;
+    if (!_isListening || _isDisposed) return;
 
-    await _speechToText.stop();
+    try {
+      await _speechToText.stop();
+      debugPrint('Stop listening called');
+    } catch (e) {
+      debugPrint('Stop listening error: $e');
+    }
+
     _onListeningStopped();
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
-    _transcriptionController.add(result.recognizedWords);
+    if (_isDisposed) return;
+
+    debugPrint('Speech result: ${result.recognizedWords} (final: ${result.finalResult})');
+    _addToTranscriptionStream(result.recognizedWords);
 
     if (result.finalResult) {
       debugPrint('Final transcription: ${result.recognizedWords}');
@@ -103,6 +129,8 @@ class VoiceService {
   }
 
   void _onSpeechStatus(String status) {
+    if (_isDisposed) return;
+
     debugPrint('Speech status: $status');
 
     if (status == 'done' || status == 'notListening') {
@@ -111,19 +139,42 @@ class VoiceService {
   }
 
   void _onSpeechError(SpeechRecognitionError error) {
+    if (_isDisposed) return;
+
     debugPrint('Speech error: ${error.errorMsg}');
     _onListeningStopped();
   }
 
   void _onListeningStopped() {
+    if (_isDisposed) return;
+
     _isListening = false;
-    _listeningController.add(false);
+    _addToListeningStream(false);
+    debugPrint('Listening stopped');
+  }
+
+  void _addToTranscriptionStream(String text) {
+    if (!_isDisposed && _transcriptionController != null && !_transcriptionController!.isClosed) {
+      _transcriptionController!.add(text);
+    }
+  }
+
+  void _addToListeningStream(bool isListening) {
+    if (!_isDisposed && _listeningController != null && !_listeningController!.isClosed) {
+      _listeningController!.add(isListening);
+    }
   }
 
   Future<void> speak(String text) async {
-    if (!_isInitialized) await initialize();
+    if (_isDisposed) return;
+
+    if (!_isInitialized) {
+      bool initialized = await initialize();
+      if (!initialized) return;
+    }
 
     try {
+      debugPrint('Speaking: $text');
       await _flutterTts.speak(text);
     } catch (e) {
       debugPrint('TTS error: $e');
@@ -131,13 +182,36 @@ class VoiceService {
   }
 
   Future<void> stopSpeaking() async {
-    await _flutterTts.stop();
+    if (_isDisposed) return;
+
+    try {
+      await _flutterTts.stop();
+    } catch (e) {
+      debugPrint('Stop speaking error: $e');
+    }
   }
 
   void dispose() {
-    _transcriptionController.close();
-    _listeningController.close();
-    _speechToText.cancel();
-    _flutterTts.stop();
+    if (_isDisposed) return;
+
+    _isDisposed = true;
+    _isListening = false;
+
+    debugPrint('Disposing voice service...');
+
+    try {
+      _speechToText.cancel();
+      _flutterTts.stop();
+    } catch (e) {
+      debugPrint('Error during service disposal: $e');
+    }
+
+    _transcriptionController?.close();
+    _listeningController?.close();
+
+    _transcriptionController = null;
+    _listeningController = null;
+
+    debugPrint('Voice service disposed');
   }
 }

@@ -170,7 +170,6 @@ class _AppInitializerState extends State<AppInitializer> {
 
   @override
   void dispose() {
-    _voiceService.dispose();
     super.dispose();
   }
 }
