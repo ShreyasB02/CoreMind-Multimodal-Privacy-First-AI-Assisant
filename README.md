@@ -109,7 +109,7 @@ Open [http://localhost:8501](http://localhost:8501) to access the UI.
 
 ---
 
-## 🎯 Why This Matters
+## 🎯 Significance
 
 CoreMind is a prototype of **next-generation Siri** capabilities that I want to see Siri being expanded to:
 - Multimodal understanding (speech, vision, text)  
