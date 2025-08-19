@@ -5,7 +5,7 @@
 CoreMind is a **privacy-first, multimodal AI assistant** inspired by Apple's design philosophy, built to run fully **on-device**.  
 It ingests **voice, images, and app data** (Slack, Calendar, Teams) via a custom **Model Context Protocol (MCP)** and provides **instant semantic recall**, **summaries**, and **insights**, without sending your data to the cloud.
 ---
-![HomeScreen](resources/Home_Screen.jpg "Home_Screen")
+![HomeScreen](Home_Screen.jpeg "Home_Screen")
 ---
 
 ## ✨ Features
