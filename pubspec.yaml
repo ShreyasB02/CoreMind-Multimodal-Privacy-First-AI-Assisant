@@ -15,7 +15,6 @@ dependencies:
   speech_to_text: ^7.3.0
   flutter_tts: ^4.1.0
   tflite_flutter: ^0.11.0
-  #tflite_flutter_helper: ^0.3.1
 
   # Data & Storage
   sqflite: ^2.3.3+1
@@ -25,6 +24,7 @@ dependencies:
   # System Integration
   workmanager: ^0.9.0+2
   permission_handler: ^12.0.1
+  file_picker: ^6.1.1
 
   # MCP & Communication
   web_socket_channel: ^3.0.3
@@ -47,5 +47,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/models/
+    - assets/models/gemma3b_int4.litertlm
     - assets/prompts/

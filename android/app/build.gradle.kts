@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.coremind"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36  // ✅ Updated to match Gallery
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -20,24 +20,19 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.coremind"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 31  // ✅ Updated to match Gallery (minimum for stable GenAI)
+        targetSdk = 35  // ✅ Updated to match Gallery
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
-        debug{
+        debug {
             isMinifyEnabled = false
             isShrinkResources = false
         }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
@@ -45,11 +40,36 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // ✅ EXACT SAME MEDIAPIPE VERSIONS AS GOOGLE AI EDGE GALLERY
+    implementation("com.google.mediapipe:tasks-genai:0.10.24")  // Latest GenAI version
+    implementation("com.google.mediapipe:tasks-text:0.10.14")   // Text processing support
+
+    // ✅ TENSORFLOW LITE DEPENDENCIES (Gallery uses these for model support)
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.14.0")  // GPU acceleration
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+
+    // ✅ COROUTINES (you already have this - good!)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ✅ PROTOBUF SUPPORT (Gallery uses this for model data)
+    implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+
+    // ✅ ANDROIDX LIFECYCLE (you already have this - good!)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // ✅ WORK MANAGER (Gallery uses this for background downloads)
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // ✅ ANDROIDX CORE (likely already included by Flutter, but explicit is better)
+    implementation("androidx.core:core-ktx:1.12.0")
 }
