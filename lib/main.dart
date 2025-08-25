@@ -118,7 +118,7 @@ class _AppInitializationWrapperState extends State<AppInitializationWrapper> {
       });
 
       // Initialize token storage
-      await ModelDownloader.saveHuggingFaceToken("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");
+      await ModelDownloader.saveHuggingFaceToken("HF_TOKEN");
 
       setState(() {
         _initializationStatus = 'Verifying system requirements...';
